@@ -41,6 +41,9 @@ export class CurrencyProvider {
       case 'ETH':
         value = value * 1e-18;
         break;
+      case 'PKT':
+        value = value / 0x40000000;
+        break;
       default:
         value = value * 1e-8;
         break;

@@ -23,7 +23,7 @@
           <ion-grid>
             <ion-row>
               <ion-col col-12 col-md class="allow-truncated-text">
-                <block-summary *ngIf="chainNetwork.chain === 'BTC' || chainNetwork.chain === 'BCH'" [block]="block" [chainNetwork]="chainNetwork"></block-summary>
+                <block-summary *ngIf="chainNetwork.chain === 'BTC' || chainNetwork.chain === 'BCH' || chainNetwork.chain === 'PKT'" [block]="block" [chainNetwork]="chainNetwork"></block-summary>
                 <block-summary-eth *ngIf="chainNetwork.chain === 'ETH'" [block]="block" [chainNetwork]="chainNetwork"></block-summary-eth>
                 <ion-item>
                   Number of Transactions
@@ -101,6 +101,44 @@
             </ion-row>
           </ion-grid>
         </ion-list>
+
+        <div *ngif="pcp !== undefined && chainNetwork.chain === 'PKT'">
+          <h2>PacketCrypt</h2>
+          <ion-list class="list--summary">
+            <ion-grid>
+              <ion-row>
+                <ion-col col-12 col-md class="allow-truncated-text">
+                  <ion-item>
+                    Announcements
+                    <ion-note item-end>
+                      {{ pcp.annCount }}
+                    </ion-note>
+                  </ion-item>
+                  <ion-item>
+                    Announcement Work
+                    <ion-note item-end>
+                      {{ pcp.diff }}
+                    </ion-note>
+                  </ion-item>
+                </ion-col>
+                <ion-col col-12 col-md class="allow-truncated-text">
+                  <ion-item>
+                    Hashrate Multiplier
+                    <ion-note item-end>
+                      {{ pcp.annCount * pcp.diff }}
+                    </ion-note>
+                  </ion-item>
+                  <ion-item>
+                      Block Miner Hashes
+                      <ion-note item-end>
+                        {{ pktGetBlockMinerHashes() }}
+                      </ion-note>
+                  </ion-item>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-list>
+        </div>
 
         <h2>Transactions</h2>
         <transaction-list [queryType]="'blockHash'" [queryValue]="block.hash" [chainNetwork]="chainNetwork">

@@ -7,7 +7,7 @@
                 <div class= "menu">
                   <h2> Explore </h2>
                   <div class="menu-button" (click)="goToBlocks()"> Blocks </div>
-                  <div class="menu-button" (click)="goToPriceChartHandler()"> Price </div>
+                  <div *ngIf="chainNetwork.chain !== 'PKT'" class="menu-button" (click)="goToPriceChartHandler()"> Price </div>
                   <div class="menu-button" (click)=" drawDailyTxChartHandler()"> Txs per day </div>
                 </div>
             </ion-col>

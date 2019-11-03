@@ -4,9 +4,12 @@
   </div>
   <div *ngIf="coinName === 'Bitcoin Cash'">
     {{ coinTransactionPerDay }} bitcoin cash transactions confirmed over last 24 hours
-  </div>  
+  </div>
    <div *ngIf="coinName === 'Ethereum'">
     {{ coinTransactionPerDay }} ethereum transactions confirmed over last 24 hours
+  </div>
+  <div *ngIf="coinName === 'PKT'">
+        {{ coinTransactionPerDay }} pkt transactions confirmed over last 24 hours
   </div>
   <canvas #lineCanvas></canvas>
 </div>

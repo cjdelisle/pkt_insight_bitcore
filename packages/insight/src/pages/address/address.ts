@@ -49,7 +49,8 @@ export class AddressPage {
 
     if (
       this.chainNetwork.chain === 'BTC' ||
-      this.chainNetwork.chain === 'BCH'
+      this.chainNetwork.chain === 'BCH' ||
+      this.chainNetwork.chain === 'PKT'
     ) {
       this.events.subscribe('TransactionList', (d: any) => {
         this.nroTransactions = d.length;

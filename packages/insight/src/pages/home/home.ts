@@ -169,6 +169,39 @@ export class HomePage {
             }
           }
         }
+      },
+      pkt: {
+        name: 'PKT',
+        historicalRates: [],
+        dailyTransactionCounts: [],
+        currentPrice: 0,
+        averagePrice: 0,
+        backgroundColor: 'rgba(69,99,246,1)',
+        gradientBackgroundColor: 'rgba(69,99,246, 0.2)',
+        ticks: {
+          thirtyDayTicks: {
+            yAxesTicks: {
+              maxTicksLimit: 10,
+              stepSize: 25,
+              callback: value => yValueCallback(value)
+            },
+            xAxesTicks: {
+              maxTicksLimit: 5,
+              stepSize: 5
+            }
+          },
+          sevenDayTicks: {
+            yAxesTicks: {
+              maxTicksLimit: 10,
+              stepSize: 25,
+              callback: value => yValueCallback(value)
+            },
+            xAxesTicks: {
+              maxTicksLimit: 7,
+              stepSize: 1
+            }
+          }
+        }
       }
     };
   }

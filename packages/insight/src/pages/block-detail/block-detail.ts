@@ -25,8 +25,11 @@ export class BlockDetailPage {
     tx: []
   };
   public chainNetwork: ChainNetwork;
+  public pcp: any;
 
   private blockHash: string;
+
+  private packetcryptMagicPrefix: Buffer = Buffer.from('6a3009f91102', 'hex');
 
   constructor(
     public navParams: NavParams,
@@ -51,6 +54,26 @@ export class BlockDetailPage {
   }
 
   ionViewDidEnter() {
+    if (this.chainNetwork.chain === 'PKT') {
+      this.blocksProvider
+        .getCoinsForBlockHash(this.blockHash, this.chainNetwork, 1, 1)
+        .subscribe(txidCoins => {
+          const out = txidCoins.outputs.pop();
+          if (out.value !== 0) {
+              return;
+          }
+          let buf = Buffer.from(out.script, 'base64');
+          if (buf.indexOf(this.packetcryptMagicPrefix) !== 0) {
+              return;
+          }
+          buf = buf.slice(this.packetcryptMagicPrefix.length);
+          const annLeastWorkTarget = buf.readUInt32LE(0);
+          const diff = Math.floor(this.blocksProvider.pktWorkForBits(annLeastWorkTarget));
+          const annCount = buf.readUInt32LE(4 + 32) + (buf.readUInt32LE(4 + 32 + 4) * 0x100000000);
+          this.pcp = { diff, annCount };
+        });
+    }
+
     this.blocksProvider.getBlock(this.blockHash, this.chainNetwork).subscribe(
       response => {
         let block;
@@ -59,6 +82,9 @@ export class BlockDetailPage {
           this.chainNetwork.chain === 'BCH'
         ) {
           block = this.blocksProvider.toUtxoCoinAppBlock(response);
+        }
+        if (this.chainNetwork.chain === 'PKT') {
+          block = this.blocksProvider.toPKTAppBlock(response);
         }
         if (this.chainNetwork.chain === 'ETH') {
           block = this.blocksProvider.toEthAppBlock(response);
@@ -74,6 +100,12 @@ export class BlockDetailPage {
         this.loading = false;
       }
     );
+  }
+
+  public getBlockMinerHashes(): number {
+      if (this.loading || this.pcp === undefined) { return -1; }
+      const cube = Math.pow(this.block.difficulty * 4096, 3);
+      return Math.floor(cube / this.pcp.diff / this.pcp.annCount);
   }
 
   public goToPreviousBlock(): void {

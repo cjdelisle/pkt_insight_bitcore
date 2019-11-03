@@ -53,6 +53,14 @@ export interface AppBlock {
   reward: number;
 }
 
+export interface AppPktBlock extends AppUtxoCoinBlock {
+  pkt: {
+    annCount: number;
+    annWork: number;
+    totalWork: number;
+  };
+}
+
 export interface AppUtxoCoinBlock extends AppBlock {
   difficulty: number;
   merkleroot: string;
@@ -94,6 +102,31 @@ export class BlocksProvider {
       bits: block.bits.toString(16),
       difficulty
     };
+  }
+
+  public pktWorkForBits(bits: number): number {
+    const compactToDbl = (c: number) => {
+      if (c < 1) { return 0; }
+      return (c & 0x007fffff) * Math.pow(256, (c >> 24) - 3);
+    };
+    const TWO_TO_THE_256 = 1.157920892373162e+77;
+    const workForTar = (target: number) => ( TWO_TO_THE_256 / (target + 1) );
+    return workForTar(compactToDbl(bits));
+  }
+
+  public toPKTAppBlock(block: ApiUtxoCoinBlock): AppPktBlock {
+    let aucb = this.toUtxoCoinAppBlock(block);
+    const diff = this.pktWorkForBits(block.bits) / 4096;
+    const out: AppPktBlock = {
+      ...aucb,
+      pkt: {
+        totalWork: Math.floor(Math.pow(diff, 3)),
+        annCount: -1,
+        annWork: -1,
+      }
+    };
+    out.difficulty = diff;
+    return out;
   }
 
   public toAppBlock(block: ApiBlock): AppBlock {

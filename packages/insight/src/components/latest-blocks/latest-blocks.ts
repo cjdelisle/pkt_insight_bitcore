@@ -69,6 +69,9 @@ export class LatestBlocksComponent implements OnInit, OnDestroy {
               ) {
                 return this.blocksProvider.toUtxoCoinAppBlock(block);
               }
+              if (this.chainNetwork.chain === 'PKT') {
+                return this.blocksProvider.toPKTAppBlock(block);
+              }
               if (this.chainNetwork.chain === 'ETH') {
                 return this.blocksProvider.toEthAppBlock(block);
               }
@@ -101,6 +104,9 @@ export class LatestBlocksComponent implements OnInit, OnDestroy {
                 this.chainNetwork.chain === 'BCH'
               ) {
                 return this.blocksProvider.toUtxoCoinAppBlock(block);
+              }
+              if (this.chainNetwork.chain === 'PKT') {
+                return this.blocksProvider.toPKTAppBlock(block);
               }
               if (this.chainNetwork.chain === 'ETH') {
                 return this.blocksProvider.toEthAppBlock(block);

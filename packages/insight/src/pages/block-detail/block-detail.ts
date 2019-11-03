@@ -102,7 +102,7 @@ export class BlockDetailPage {
     );
   }
 
-  public getBlockMinerHashes(): number {
+  public pktGetBlockMinerHashes(): number {
       if (this.loading || this.pcp === undefined) { return -1; }
       const cube = Math.pow(this.block.difficulty * 4096, 3);
       return Math.floor(cube / this.pcp.diff / this.pcp.annCount);

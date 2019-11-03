@@ -5,8 +5,8 @@ import { LatestBlocksComponent } from '../../components/latest-blocks/latest-blo
 import { ApiProvider, ChainNetwork } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { PriceProvider } from '../../providers/price/price';
-import { TxsProvider } from '../../providers/transactions/transactions';
 import { RedirProvider } from '../../providers/redir/redir';
+import { TxsProvider } from '../../providers/transactions/transactions';
 
 @Injectable()
 @IonicPage({

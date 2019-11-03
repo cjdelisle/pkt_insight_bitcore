@@ -53,19 +53,19 @@ export interface AppBlock {
   reward: number;
 }
 
+export interface AppUtxoCoinBlock extends AppBlock {
+  difficulty: number;
+  merkleroot: string;
+  bits: string;
+  version: number;
+}
+
 export interface AppPktBlock extends AppUtxoCoinBlock {
   pkt: {
     annCount: number;
     annWork: number;
     totalWork: number;
   };
-}
-
-export interface AppUtxoCoinBlock extends AppBlock {
-  difficulty: number;
-  merkleroot: string;
-  bits: string;
-  version: number;
 }
 
 export interface AppEthBlock extends AppBlock {
@@ -107,7 +107,10 @@ export class BlocksProvider {
   public pktWorkForBits(bits: number): number {
     const compactToDbl = (c: number) => {
       if (c < 1) { return 0; }
+      // Bitwise operations for decoding a compact integer
+      // tslint:disable
       return (c & 0x007fffff) * Math.pow(256, (c >> 24) - 3);
+      // tslint:enable
     };
     const TWO_TO_THE_256 = 1.157920892373162e+77;
     const workForTar = (target: number) => ( TWO_TO_THE_256 / (target + 1) );
@@ -115,7 +118,7 @@ export class BlocksProvider {
   }
 
   public toPKTAppBlock(block: ApiUtxoCoinBlock): AppPktBlock {
-    let aucb = this.toUtxoCoinAppBlock(block);
+    const aucb = this.toUtxoCoinAppBlock(block);
     const diff = this.pktWorkForBits(block.bits) / 4096;
     const out: AppPktBlock = {
       ...aucb,

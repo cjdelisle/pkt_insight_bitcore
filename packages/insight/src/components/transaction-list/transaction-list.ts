@@ -76,7 +76,8 @@ export class TransactionListComponent implements OnInit {
                   response.spendingTxInputs,
                   response.spendingTxOutputs
                 );
-                this.events.publish('TransactionList', { length: txs.length });
+                const count = response.count || response.coins.length;
+                this.events.publish('TransactionList', { length: count });
                 this.loading = false;
               },
               () => {

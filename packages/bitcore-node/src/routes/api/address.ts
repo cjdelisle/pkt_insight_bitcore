@@ -37,8 +37,17 @@ router.get('/:address/coins', async function(req, res) {
 
   try {
     const { query, options } = Storage.getFindOptions(CoinStorage, req.query);
+    if (!options.limit) {
+      options.limit = 100;
+    }
 
     let coins = await CoinStorage.collection.find({ ...query, address, chain, network }, options).toArray();
+
+    let count = coins.length;
+    if (count === 100) {
+      delete options.limit;
+      count = await CoinStorage.collection.count({ ...query, address, chain, network }, options);
+    }
 
     let spentTxids = coins.filter(tx => tx.spentTxid).map(tx => tx.spentTxid);
     let mintedTxids = coins.filter(tx => tx.mintTxid).map(tx => tx.mintTxid);
@@ -50,6 +59,7 @@ router.get('/:address/coins', async function(req, res) {
       CoinStorage.collection.find({ chain, network, mintTxid: { $in: spentTxids } }).toArray()
     ]);
     return res.json({
+      count,
       coins,
       mintedTxids,
       fundingTxInputs,

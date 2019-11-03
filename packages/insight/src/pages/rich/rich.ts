@@ -60,4 +60,11 @@ export class RichPage {
       network: this.chainNetwork.network
     });
   }
+
+  public goToBlocks(): void {
+    this.redirProvider.redir('home', {
+      chain: this.chainNetwork.chain,
+      network: this.chainNetwork.network
+    });
+  }
 }

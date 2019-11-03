@@ -102,7 +102,7 @@
           </ion-grid>
         </ion-list>
 
-        <div *ngif="pcp !== undefined && chainNetwork.chain === 'PKT'">
+        <div *ngIf="pcp !== undefined && chainNetwork.chain === 'PKT'">
           <h2>PacketCrypt</h2>
           <ion-list class="list--summary">
             <ion-grid>

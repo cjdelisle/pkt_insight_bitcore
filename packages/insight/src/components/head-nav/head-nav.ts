@@ -10,6 +10,7 @@ import {
 import * as _ from 'lodash';
 import { ApiProvider, ChainNetwork } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
+import { DefaultProvider } from '../../providers/default/default';
 import { Logger } from '../../providers/logger/logger';
 import { PriceProvider } from '../../providers/price/price';
 import { RedirProvider } from '../../providers/redir/redir';
@@ -31,6 +32,7 @@ export class HeadNavComponent implements OnInit {
   public q: string;
   public redirTo: any;
   public params: any;
+  public logoName: string;
 
   constructor(
     public app: App,
@@ -43,8 +45,11 @@ export class HeadNavComponent implements OnInit {
     public redirProvider: RedirProvider,
     private navCtrl: NavController,
     private logger: Logger,
-    private apiProvider: ApiProvider
-  ) {}
+    private apiProvider: ApiProvider,
+    defaultProvider: DefaultProvider
+  ) {
+    this.logoName = defaultProvider.getDefault('%LOGO_NAME%') || 'insight';
+  }
 
   public ngOnInit(): void {
     this.params = {

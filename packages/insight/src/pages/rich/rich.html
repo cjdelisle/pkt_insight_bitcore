@@ -1,0 +1,35 @@
+<head-nav [chainNetwork]="chainNetwork"></head-nav>
+<ion-content>
+  <ion-grid class="page-content-grid-desktop">
+    <ion-row>
+        <ion-col col-2 class="page-content-menu">
+            <div class= "menu">
+                <h2> Explore </h2>
+                <div class="menu-button" (click)="goToBlocks()"> Blocks </div>
+                <div *ngIf="chainNetwork.chain !== 'PKT'" class="menu-button" (click)="goToPriceChartHandler()"> Price </div>
+                <div class="menu-button" (click)=" drawDailyTxChartHandler()"> Txs per day </div>
+                <div class="menu-button" (click)="goToRichList()"> Rich list </div>
+            </div>
+        </ion-col>
+
+        <ion-col col-10 class="page-content">
+            <loader *ngIf="loading" [type]="'title'"></loader>
+
+            <div *ngIf="!loading">
+            <h1>Rich List</h1>
+            <ion-grid class="grid--table">
+                <ion-row *ngFor="let addr of richlist">
+                <ion-col>
+                <a (click)="goToAddress(addr.address)">{{ addr.address }}</a>
+                </ion-col>
+                <ion-col text-right>
+                {{ addr.balance }}
+                </ion-col>
+                </ion-row>
+            </ion-grid>
+            </div>
+        </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+<footer [chainNetwork]="chainNetwork"></footer>

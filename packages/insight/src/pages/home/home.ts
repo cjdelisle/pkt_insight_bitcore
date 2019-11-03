@@ -6,6 +6,7 @@ import { ApiProvider, ChainNetwork } from '../../providers/api/api';
 import { CurrencyProvider } from '../../providers/currency/currency';
 import { PriceProvider } from '../../providers/price/price';
 import { TxsProvider } from '../../providers/transactions/transactions';
+import { RedirProvider } from '../../providers/redir/redir';
 
 @Injectable()
 @IonicPage({
@@ -38,6 +39,7 @@ export class HomePage {
     public navParams: NavParams,
     private apiProvider: ApiProvider,
     private priceProvider: PriceProvider,
+    private redirProvider: RedirProvider,
     public events: Events,
     public currencyProvider: CurrencyProvider,
     public transactionProvider: TxsProvider
@@ -259,6 +261,15 @@ export class HomePage {
   public goToBlocks() {
     this.switchView('blocks');
   }
+
+  public goToRichList() {
+    this.switchView('rich');
+    this.redirProvider.redir('rich', {
+        chain: this.chainNetwork.chain,
+        network: this.chainNetwork.network
+      });
+  }
+
 
   public openPage(page: string): void {
     this.nav.push(page, {

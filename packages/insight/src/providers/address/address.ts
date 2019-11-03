@@ -50,4 +50,12 @@ export class AddressProvider {
       `${this.apiProvider.getUrl(chainNetwork)}/address/${addrStr}/coins`
     );
   }
+
+  public getRichList(
+      chainNetwork?: ChainNetwork
+  ): Observable<Array<{ address: string, balance: number }>> {
+    return this.httpClient.get<Array<{ address: string, balance: number }>>(
+      `${this.apiProvider.getUrl(chainNetwork)}/stats/richlist`
+    );
+  }
 }

@@ -9,6 +9,7 @@
                   <div class="menu-button" (click)="goToBlocks()"> Blocks </div>
                   <div *ngIf="chainNetwork.chain !== 'PKT'" class="menu-button" (click)="goToPriceChartHandler()"> Price </div>
                   <div class="menu-button" (click)=" drawDailyTxChartHandler()"> Txs per day </div>
+                  <div class="menu-button" (click)="goToRichList()"> Rich list </div>
                 </div>
             </ion-col>
 
@@ -18,7 +19,6 @@
                 </latest-blocks>
               </ion-col>
 
-        
               <ion-col col-10 class="page-content" *ngIf="currentView === 'price-chart'">
                 <h2>Price Chart</h2>
                 <price-chart #priceChart> </price-chart>

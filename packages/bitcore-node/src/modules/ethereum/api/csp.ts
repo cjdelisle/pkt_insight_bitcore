@@ -126,6 +126,10 @@ export class ETHStateProvider extends InternalStateProvider implements CSP.IChai
     return { confirmed: balance, unconfirmed: 0, balance };
   }
 
+  async getRichList(_params: CSP.GetRichListParams) {
+      return [];
+  }
+
   async getLocalTip({ chain, network }) {
     return EthBlockStorage.getLocalTip({ chain, network });
   }

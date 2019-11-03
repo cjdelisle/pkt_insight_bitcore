@@ -23,6 +23,20 @@ router.get('/daily-transactions', async function(req: Request, res: Response) {
   }
 });
 
+router.get('/richlist', async function(req, res) {
+  let { chain, network } = req.params;
+  try {
+    let result = await ChainStateProvider.getRichList({
+      chain,
+      network,
+      args: req.query
+    });
+    return res.send(result || []);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
 module.exports = {
   router: router,
   path: '/stats'

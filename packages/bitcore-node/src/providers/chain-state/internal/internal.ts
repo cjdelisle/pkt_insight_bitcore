@@ -3,6 +3,7 @@ import through2 from 'through2';
 import { MongoBound } from '../../../models/base';
 import { ObjectId } from 'mongodb';
 import { CoinStorage, ICoin } from '../../../models/coin';
+import { RichListStorage } from '../../../models/richlist';
 import { BitcoinBlockStorage, IBtcBlock } from '../../../models/block';
 import { WalletStorage, IWallet } from '../../../models/wallet';
 import { WalletAddressStorage, IWalletAddress } from '../../../models/walletAddress';
@@ -74,6 +75,15 @@ export class InternalStateProvider implements CSP.IChainStateService {
     };
     let balance = await CoinStorage.getBalance({ query });
     return balance;
+  }
+
+  async getRichList(params: CSP.GetRichListParams) {
+    const { chain, network } = params;
+    const query = {
+      chain,
+      network
+    };
+    return await RichListStorage.getRichList({ query });
   }
 
   streamBlocks(params: CSP.StreamBlocksParams) {

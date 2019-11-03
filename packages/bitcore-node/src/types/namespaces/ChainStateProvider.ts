@@ -11,6 +11,7 @@ import { CoinListingJSON } from '../Coin';
 import { DailyTransactionsJSON } from '../stats';
 import { ICoin } from '../../models/coin';
 import { IBlock } from '../../models/baseBlock';
+import { IRichList } from '../../models/richlist';
 export declare namespace CSP {
   export type StreamWalletTransactionsArgs = {
     startBlock: number;
@@ -30,6 +31,10 @@ export declare namespace CSP {
 
   export type GetBalanceForAddressParams = ChainNetwork & {
     address: string;
+    args: any;
+  };
+
+  export type GetRichListParams = ChainNetwork & {
     args: any;
   };
 
@@ -132,6 +137,7 @@ export declare namespace CSP {
     getBalanceForAddress(
       params: GetBalanceForAddressParams
     ): Promise<{ confirmed: number; unconfirmed: number; balance: number }>;
+    getRichList(params: GetRichListParams): Promise<IRichList[]>;
     getBlock(params: GetBlockParams): Promise<IBlock>;
     streamBlocks(params: StreamBlocksParams): any;
     getFee(params: GetEstimateSmartFeeParams): any;

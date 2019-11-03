@@ -23,7 +23,7 @@ export class RichListModel extends BaseModel<IRichList> {
   }
 
   async getRichList(params: { query: any }): Promise<IRichList[]> {
-    return await this.collection.find(params.query)..toArray();
+    return await this.collection.find(params.query).toArray();
   }
 }
 export let RichListStorage = new RichListModel();

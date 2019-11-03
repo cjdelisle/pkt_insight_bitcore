@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var BlockHeader = require('./blockheader');
+var PacketCryptProof = require('./packetcryptproof');
 var BN = require('../crypto/bn');
 var BufferUtil = require('../util/buffer');
 var BufferReader = require('../encoding/bufferreader');
@@ -63,6 +64,7 @@ Block._fromObject = function _fromObject(data) {
   });
   var info = {
     header: BlockHeader.fromObject(data.header),
+    pcp: PacketCryptProof.fromObject(data.pcp),
     transactions: transactions
   };
   return info;
@@ -86,6 +88,7 @@ Block._fromBufferReader = function _fromBufferReader(br) {
   var info = {};
   $.checkState(!br.finished(), 'No block data received');
   info.header = BlockHeader.fromBufferReader(br);
+  info.pcp = PacketCryptProof.fromBufferReader(br);
   var transactions = br.readVarintNum();
   info.transactions = [];
   for (var i = 0; i < transactions; i++) {
@@ -145,6 +148,7 @@ Block.prototype.toObject = Block.prototype.toJSON = function toObject() {
   });
   return {
     header: this.header.toObject(),
+    pcp: this.pcp.toObject(),
     transactions: transactions
   };
 };
@@ -172,6 +176,7 @@ Block.prototype.toBufferWriter = function toBufferWriter(bw) {
     bw = new BufferWriter();
   }
   bw.write(this.header.toBuffer());
+  this.pcp.toBufferWriter(bw);
   bw.writeVarintNum(this.transactions.length);
   for (var i = 0; i < this.transactions.length; i++) {
     this.transactions[i].toBufferWriter(bw);

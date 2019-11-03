@@ -6,30 +6,29 @@ var errors = require('./errors');
 var $ = require('./util/preconditions');
 
 var UNITS = {
-  'BTC'      : [1e8, 8],
-  'mBTC'     : [1e5, 5],
-  'uBTC'     : [1e2, 2],
-  'bits'     : [1e2, 2],
-  'satoshis' : [1, 0]
+  'PKT'      : [0x40000000, 10],
+  'mPKT'     : [0x100000, 7],
+  'uPKT'     : [0x400, 4],
+  'bits'     : [1, 0],
 };
 
 /**
  * Utility for handling and converting bitcoins units. The supported units are
- * BTC, mBTC, bits (also named uBTC) and satoshis. A unit instance can be created with an
- * amount and a unit code, or alternatively using static methods like {fromBTC}.
+ * PKT, mPKT, bits (also named uPKT) and satoshis. A unit instance can be created with an
+ * amount and a unit code, or alternatively using static methods like {fromPKT}.
  * It also allows to be created from a fiat amount and the exchange rate, or
  * alternatively using the {fromFiat} static method.
  * You can consult for different representation of a unit instance using it's
  * {to} method, the fixed unit methods like {toSatoshis} or alternatively using
  * the unit accessors. It also can be converted to a fiat amount by providing the
- * corresponding BTC/fiat exchange rate.
+ * corresponding PKT/fiat exchange rate.
  *
  * @example
  * ```javascript
- * var sats = Unit.fromBTC(1.3).toSatoshis();
- * var mili = Unit.fromBits(1.3).to(Unit.mBTC);
+ * var sats = Unit.fromPKT(1.3).toSatoshis();
+ * var mili = Unit.fromBits(1.3).to(Unit.mPKT);
  * var bits = Unit.fromFiat(1.3, 350).bits;
- * var btc = new Unit(1.3, Unit.bits).BTC;
+ * var btc = new Unit(1.3, Unit.bits).PKT;
  * ```
  *
  * @param {Number} amount - The amount to be represented
@@ -42,13 +41,13 @@ function Unit(amount, code) {
     return new Unit(amount, code);
   }
 
-  // convert fiat to BTC
+  // convert fiat to PKT
   if (_.isNumber(code)) {
     if (code <= 0) {
       throw new errors.Unit.InvalidRate(code);
     }
     amount = amount / code;
-    code = Unit.BTC;
+    code = Unit.PKT;
   }
 
   this._value = this._from(amount, code);
@@ -80,23 +79,33 @@ Unit.fromObject = function fromObject(data){
 };
 
 /**
- * Returns a Unit instance created from an amount in BTC
+ * Returns a Unit instance created from an amount in PKT
  *
- * @param {Number} amount - The amount in BTC
+ * @param {Number} amount - The amount in PKT
  * @returns {Unit} A Unit instance
  */
-Unit.fromBTC = function(amount) {
-  return new Unit(amount, Unit.BTC);
+Unit.fromPKT = function(amount) {
+  return new Unit(amount, Unit.PKT);
 };
 
 /**
- * Returns a Unit instance created from an amount in mBTC
+ * Returns a Unit instance created from an amount in mPKT
  *
- * @param {Number} amount - The amount in mBTC
+ * @param {Number} amount - The amount in mPKT
  * @returns {Unit} A Unit instance
  */
 Unit.fromMillis = Unit.fromMilis = function(amount) {
-  return new Unit(amount, Unit.mBTC);
+  return new Unit(amount, Unit.mPKT);
+};
+
+/**
+ * Returns a Unit instance created from an amount in uPKT
+ *
+ * @param {Number} amount - The amount in bits
+ * @returns {Unit} A Unit instance
+ */
+Unit.fromMicros = function(amount) {
+  return new Unit(amount, Unit.uPKT);
 };
 
 /**
@@ -105,25 +114,15 @@ Unit.fromMillis = Unit.fromMilis = function(amount) {
  * @param {Number} amount - The amount in bits
  * @returns {Unit} A Unit instance
  */
-Unit.fromMicros = Unit.fromBits = function(amount) {
+Unit.fromBits = function(amount) {
   return new Unit(amount, Unit.bits);
-};
-
-/**
- * Returns a Unit instance created from an amount in satoshis
- *
- * @param {Number} amount - The amount in satoshis
- * @returns {Unit} A Unit instance
- */
-Unit.fromSatoshis = function(amount) {
-  return new Unit(amount, Unit.satoshis);
 };
 
 /**
  * Returns a Unit instance created from a fiat amount and exchange rate.
  *
  * @param {Number} amount - The amount in fiat
- * @param {Number} rate - The exchange rate BTC/fiat
+ * @param {Number} rate - The exchange rate PKT/fiat
  * @returns {Unit} A Unit instance
  */
 Unit.fromFiat = function(amount, rate) {
@@ -148,7 +147,7 @@ Unit.prototype.to = function(code) {
     if (code <= 0) {
       throw new errors.Unit.InvalidRate(code);
     }
-    return parseFloat((this.BTC * code).toFixed(2));
+    return parseFloat((this.PKT * code).toFixed(2));
   }
 
   if (!UNITS[code]) {
@@ -160,21 +159,21 @@ Unit.prototype.to = function(code) {
 };
 
 /**
- * Returns the value represented in BTC
+ * Returns the value represented in PKT
  *
- * @returns {Number} The value converted to BTC
+ * @returns {Number} The value converted to PKT
  */
-Unit.prototype.toBTC = function() {
-  return this.to(Unit.BTC);
+Unit.prototype.toPKT = function() {
+  return this.to(Unit.PKT);
 };
 
 /**
- * Returns the value represented in mBTC
+ * Returns the value represented in mPKT
  *
- * @returns {Number} The value converted to mBTC
+ * @returns {Number} The value converted to mPKT
  */
 Unit.prototype.toMillis = Unit.prototype.toMilis = function() {
-  return this.to(Unit.mBTC);
+  return this.to(Unit.mPKT);
 };
 
 /**
@@ -182,8 +181,8 @@ Unit.prototype.toMillis = Unit.prototype.toMilis = function() {
  *
  * @returns {Number} The value converted to bits
  */
-Unit.prototype.toMicros = Unit.prototype.toBits = function() {
-  return this.to(Unit.bits);
+Unit.prototype.toMicros = function() {
+  return this.to(Unit.uPKT);
 };
 
 /**
@@ -191,14 +190,14 @@ Unit.prototype.toMicros = Unit.prototype.toBits = function() {
  *
  * @returns {Number} The value converted to satoshis
  */
-Unit.prototype.toSatoshis = function() {
-  return this.to(Unit.satoshis);
+Unit.prototype.toBits = function() {
+  return this.to(Unit.bits);
 };
 
 /**
  * Returns the value represented in fiat
  *
- * @param {string} rate - The exchange rate between BTC/currency
+ * @param {string} rate - The exchange rate between PKT/currency
  * @returns {Number} The value converted to satoshis
  */
 Unit.prototype.atRate = function(rate) {
@@ -206,12 +205,12 @@ Unit.prototype.atRate = function(rate) {
 };
 
 /**
- * Returns a the string representation of the value in satoshis
+ * Returns a the string representation of the value in bits
  *
- * @returns {string} the value in satoshis
+ * @returns {string} the value in bits
  */
 Unit.prototype.toString = function() {
-  return this.satoshis + ' satoshis';
+  return this.bits + ' bits';
 };
 
 /**
@@ -221,8 +220,8 @@ Unit.prototype.toString = function() {
  */
 Unit.prototype.toObject = Unit.prototype.toJSON = function toObject() {
   return {
-    amount: this.BTC,
-    code: Unit.BTC
+    amount: this.PKT,
+    code: Unit.PKT
   };
 };
 

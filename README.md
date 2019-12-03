@@ -1,7 +1,27 @@
-# Bitcore
-![Circle CI](https://circleci.com/gh/bitpay/bitcore/tree/master.svg?style=shield)
+# Bitcore/Insight for PKT
 
-**Infrastructure to build Bitcoin and blockchain-based applications for the next generation of financial technology.**
+This is a fork of Bitcore for providing a block explorer for the PKT project.
+You can see the explorer at work by going to https://pkt-insight.cjdns.fr
+The setup is significantly the same as setting up the insight explorer, however
+you will want to specify that it is for the PKT chain:
+
+```json
+    "chains": {
+      "PKT": {
+        "pkt": {
+          "chainSource": "p2p",
+          "trustedPeers": [
+            {
+              "host": "127.0.0.1",
+              "port": 64764
+            }
+          ]
+        }
+      }
+    }
+```
+
+This explorer is a part of the [pkt_insight](https://github.com/pkt-cash/ns-projects/blob/master/projects/2019_11_13_pkt_insight.md) project financed by the [PKT Network Steward](https://pkt-cash.github.io/www.pkt.cash/steward/). The project is in early stages and this repository might move to the pkt-cash github organization but will definitely see significant improvement in the coming weeks.
 
 ## Getting Started
 

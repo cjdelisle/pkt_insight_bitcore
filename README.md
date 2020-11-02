@@ -1,5 +1,7 @@
 # Bitcore/Insight for PKT
 
+Status: unmaintained/ran-when-parked - consider using https://github.com/pkt-cash/pkt-explorer-backend instead
+
 This is a fork of Bitcore for providing a block explorer for the PKT project.
 You can see the explorer at work by going to https://pkt-insight.cjdns.fr
 The setup is significantly the same as setting up the insight explorer, however
